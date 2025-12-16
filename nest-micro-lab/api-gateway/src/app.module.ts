@@ -4,9 +4,12 @@ import { ReceiptsModule } from './receipts/receipts.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PaymentsModule } from './payment/payments.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
-  imports: [OrdersModule, ReceiptsModule,
+  imports: [OrdersModule, ReceiptsModule,PaymentsModule,NotificationsModule,
     TypeOrmModule.forRoot({
       type:'postgres',
       host:'postgres',
@@ -17,7 +20,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities:[__dirname + '/**/*.entity{.ts,.js'],
       autoLoadEntities: true,
       synchronize:true,
-    })
+    }),
+    CoreModule
   ],
   controllers:[AppController],
   providers: [AppService]

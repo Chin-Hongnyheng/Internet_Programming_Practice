@@ -1,10 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
+import { PaymentsModule } from 'src/payment/payments.module';
+import { PaymentsService } from 'src/payment/payments.service';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
+    forwardRef(() => PaymentsModule),
+    forwardRef(() => NotificationsModule),
     ClientsModule.register([
       {
         name: 'ORDERS_SERVICE',
@@ -16,8 +21,10 @@ import { OrdersService } from './orders.service';
         },
       },
     ]),
+    NotificationsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService],
+  exports: [OrdersService]
 })
 export class OrdersModule {}
