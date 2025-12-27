@@ -8,7 +8,6 @@ export class OrdersService {
   constructor(
     @Inject('ORDERS_SERVICE') private readonly client: ClientProxy,
     private readonly paymentService: PaymentsService,
-    // @Inject(forwardRef(()=>NotificationsService))
     private readonly notifications: NotificationsService
   ) {}
 
@@ -16,15 +15,13 @@ export class OrdersService {
     // In real life we might validate or save to DB first
     // Here we just emit an event
     this.client.emit('order_created', { order: orderDto, createdAt: new Date().toISOString() });
-
-    this.notifications.notify('order_created', {
-      order: orderDto,
-    });
+    // this.notifications.notify('order', 'hello world', {});
 
     return { status: 'Order accepted', order: orderDto };
   }
-  deleteOrder() {
-    this.client.emit('order_deleted', {});
-    return { status: 'Order deletion requested' };
-  }
+  // deleteOrder() {
+  //   this.client.emit('order_deleted', {});
+  //   this.notifications.notify('order_deleted', 'order_deleted', {});
+  //   return { status: 'Order deletion requested' };
+  // }
 }

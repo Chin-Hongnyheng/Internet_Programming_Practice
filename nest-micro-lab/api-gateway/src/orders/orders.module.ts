@@ -4,12 +4,12 @@ import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
 import { PaymentsModule } from 'src/payment/payments.module';
 import { PaymentsService } from 'src/payment/payments.service';
-import { NotificationsModule } from 'src/notifications/notifications.module';
+import { NotificationModule } from 'src/notifications/notification.module';
 
 @Module({
   imports: [
     forwardRef(() => PaymentsModule),
-    forwardRef(() => NotificationsModule),
+    forwardRef(() => NotificationModule),
     ClientsModule.register([
       {
         name: 'ORDERS_SERVICE',
@@ -21,7 +21,13 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
         },
       },
     ]),
-    NotificationsModule,
+    NotificationModule.forFeature({
+      featureName: 'orders',
+      prefix: '[ORDERS]',
+      channels: ['log', 'telegram'],
+      enable: true, // override global default
+    }),
+    
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

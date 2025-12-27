@@ -5,11 +5,11 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentsModule } from './payment/payments.module';
-import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationModule } from './notifications/notification.module';
 import { CoreModule } from './core/core.module';
 
 @Module({
-  imports: [OrdersModule, ReceiptsModule,PaymentsModule,NotificationsModule,
+  imports: [OrdersModule, ReceiptsModule,PaymentsModule,NotificationModule,
     TypeOrmModule.forRoot({
       type:'postgres',
       host:'postgres',
@@ -21,7 +21,12 @@ import { CoreModule } from './core/core.module';
       autoLoadEntities: true,
       synchronize:true,
     }),
-    CoreModule
+    CoreModule,
+    NotificationModule.forRoot({
+      appName: 'API Gateway Lab',
+      defaultChannel: 'log',
+      enable: true,
+    }),
   ],
   controllers:[AppController],
   providers: [AppService]
