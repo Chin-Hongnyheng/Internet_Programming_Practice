@@ -5,11 +5,13 @@ import { OrdersService } from './orders.service';
 import { PaymentsModule } from 'src/payment/payments.module';
 import { PaymentsService } from 'src/payment/payments.service';
 import { NotificationModule } from 'src/notifications/notification.module';
+import { CustomerModule } from 'src/customer/customers.module';
 
 @Module({
   imports: [
     forwardRef(() => PaymentsModule),
     forwardRef(() => NotificationModule),
+    CustomerModule,
     ClientsModule.register([
       {
         name: 'ORDERS_SERVICE',

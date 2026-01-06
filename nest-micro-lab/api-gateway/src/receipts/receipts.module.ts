@@ -1,22 +1,12 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '../database/database.module';
+import { Receipt } from './entities/receipts.entity';
 import { ReceiptsController } from './receipts.controller';
 import { ReceiptsService } from './receipts.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Receipt } from 'src/database/entities/receipts.entity';
-import { NotificationModule } from 'src/notifications/notification.module';
-
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Receipt]),
-  NotificationModule.forFeature({
-      featureName: 'receipts',
-      prefix: '[RECEIPTS]',
-      channels: ['log'], // only log for receipts
-      enable: false,
-    }),
-],
-  providers: [ReceiptsService],
+  imports: [DatabaseModule.forFeature([Receipt])],
   controllers: [ReceiptsController],
-  // exports:[ReceiptsService],
+  providers: [ReceiptsService],
 })
 export class ReceiptsModule {}

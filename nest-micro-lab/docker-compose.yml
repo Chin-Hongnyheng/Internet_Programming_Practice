@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
   rabbitmq:
@@ -38,14 +38,15 @@ services:
       - rabbitmq
   postgres:
     image: postgres:16
-    container_name: postgres
+    container_name: nest-lab-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: order-worker
+      POSTGRES_DB: nest_lab
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
   pgdata:
+
