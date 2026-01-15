@@ -47,6 +47,22 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    
+  auth-service:
+      build: ./auth-service
+      container_name: auth-service
+      command: npm run start:dev
+      ports:
+        - "3001:3000"
+      environment:
+        RABBITMQ_URL: amqp://admin:admin@rabbitmq:5672
+      volumes:
+        - ./auth-service:/app
+        - /app/node_modules
+      depends_on:
+        - rabbitmq
+      env_file:
+        - ./auth-service/.env
 volumes:
   pgdata:
 
