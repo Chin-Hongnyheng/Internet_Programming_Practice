@@ -76,27 +76,33 @@ let AuthsService = class AuthsService {
         const passwordHash = await bcrypt.hash(password, 10);
         const existing = await this.users.findOne({ where: { email } });
         if (existing) {
-            throw new common_1.UnauthorizedException("Email already registered");
+            throw new common_1.UnauthorizedException('Email already registered');
         }
         const user = this.users.create({
             email,
             passwordHash,
         });
         await this.users.save(user);
+        const role = await this.roles.findOne({
+            where: { name: 'user' },
+        });
+        if (!role) {
+            throw new Error('Default role "user" not found');
+        }
         const userRole = this.userRoles.create({
             user: { id: user.id },
-            role: { name: "user" },
+            role: { id: role.id },
         });
         await this.userRoles.save(userRole);
-        return { message: "registered" };
+        return { message: 'registered' };
     }
     async login(email, password) {
         const user = await this.users.findOne({ where: { email } });
         if (!user)
-            throw new common_1.UnauthorizedException("Invalid credentials");
+            throw new common_1.UnauthorizedException('Invalid credentials');
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok)
-            throw new common_1.UnauthorizedException("Invalid credentials");
+            throw new common_1.UnauthorizedException('Invalid credentials');
         const roles = await this.userRoles.find({
             where: { user: { id: user.id } },
             relations: { role: true, user: true },
@@ -104,13 +110,21 @@ let AuthsService = class AuthsService {
         const roleNames = roles.map((r) => r.role.name);
         const roleIds = roles.map((r) => r.role.id);
         const perms = await this.rolePerms
-            .createQueryBuilder("rp")
-            .leftJoinAndSelect("rp.permission", "permission")
-            .where("rp.roleId IN (:...roleIds)", { roleIds })
+            .createQueryBuilder('rp')
+            .leftJoinAndSelect('rp.permission', 'permission')
+            .where('rp.roleId IN (:...roleIds)', { roleIds })
             .getMany();
         const permissionKeys = [...new Set(perms.map((x) => x.permission.key))];
-        const accessToken = await this.jwt.signAsync({ sub: user.id, email: user.email, roles: roleNames, permissions: permissionKeys }, { secret: process.env.JWT_ACCESS_SECRET, expiresIn: process.env.JWT_ACCESS_EXPIRES ?? "15m" });
-        const refreshToken = (0, crypto_1.randomBytes)(48).toString("hex");
+        const accessToken = await this.jwt.signAsync({
+            sub: user.id,
+            email: user.email,
+            roles: roleNames,
+            permissions: permissionKeys,
+        }, {
+            secret: process.env.JWT_ACCESS_SECRET,
+            expiresIn: process.env.JWT_ACCESS_EXPIRES ?? '15m',
+        });
+        const refreshToken = (0, crypto_1.randomBytes)(48).toString('hex');
         const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + 7);

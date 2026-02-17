@@ -12,7 +12,8 @@ import { JwtModule } from '@nestjs/jwt'
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
-import { DemoController } from './DemoController';
+import { DemoController } from './demo.controller';
+
 
 @Module({
   imports:[

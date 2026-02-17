@@ -44,4 +44,4 @@ __decorate([
 exports.DemoController = DemoController = __decorate([
     (0, common_1.Controller)()
 ], DemoController);
-//# sourceMappingURL=DemoController.js.map
+//# sourceMappingURL=demo.controller.js.map

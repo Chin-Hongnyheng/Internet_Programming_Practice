@@ -21,7 +21,7 @@ const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
 const roles_guard_1 = require("./guards/roles.guard");
 const permissions_guard_1 = require("./guards/permissions.guard");
-const DemoController_1 = require("./DemoController");
+const demo_controller_1 = require("./demo.controller");
 let AuthsModule = class AuthsModule {
 };
 exports.AuthsModule = AuthsModule;
@@ -31,7 +31,7 @@ exports.AuthsModule = AuthsModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([users_entity_1.User, roles_entity_1.Role, permissions_entity_1.Permission, user_roles_entity_1.UserRole, role_permissions_entity_1.RolePermission, refresh_tokens_entity_1.RefreshToken]),
             jwt_1.JwtModule.register({}),
         ],
-        controllers: [auths_controller_1.AuthsController, DemoController_1.DemoController],
+        controllers: [auths_controller_1.AuthsController, demo_controller_1.DemoController],
         providers: [auths_service_1.AuthsService, jwt_strategy_1.JwtStrategy, roles_guard_1.RolesGuard, permissions_guard_1.PermissionsGuard],
         exports: [auths_service_1.AuthsService]
     })

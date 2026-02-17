@@ -1,21 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ValidationPipe } from '@nestjs/common';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [process.env.RABBITMQ_URL || 'amqp://rabbitmq:5672'],
-        queue: 'orders_queue',
-        queueOptions: { durable: false },
-        noAck: true,
-      },
-    },
-  );
+  const app = await NestFactory.create(AppModule);
 
-  await app.listen();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: false,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+  app.enableCors();
+  app.use(require('express').json({ limit: '1mb' }));
+  await app.listen(process.env.ORDER_PORT ?? 3000);
+
+  // await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
