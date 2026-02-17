@@ -19,7 +19,7 @@ export class OrdersController {
   health() {
     return { ok: true, service: 'order-worker' };
   }
-
+//hasura
   // LIST orders - Pattern B: verify JWT locally
   @UseGuards(JwtAuthGuard)
   @Get()
